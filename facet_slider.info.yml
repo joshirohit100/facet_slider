@@ -1,0 +1,5 @@
+name: 'Facet api slider'
+type: module
+description: 'Faceted search slider interfaces that can be used on Search API searchers.'
+core: 8.x
+package: Search

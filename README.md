@@ -1,1 +1,1 @@
-# facetapi_slider
+# facet_slider
