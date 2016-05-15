@@ -39,6 +39,16 @@ class SliderWidget implements WidgetInterface {
             '#type' => 'textfield',
             '#title' => $this->t('Step value'),
         ];
+        $form['slider_submit_button'] = [
+            '#type' => 'checkbox',
+            '#title' => $this->t('Want a submit button?'),
+            '#description' => $this->t('If checked, then slider will work on clicking the submit button.'),
+        ];
+        $form['slider_submit_button_txt'] = [
+            '#type' => 'textfield',
+            '#title' => $this->t('Submit button text'),
+            '#description' => $this->t('Text that will appear on submit button'),
+        ];
 
         if (!is_null($config)) {
             $widget_configs = $config->get('widget_configs');

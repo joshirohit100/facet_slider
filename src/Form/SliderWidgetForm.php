@@ -48,17 +48,15 @@ class SliderWidgetForm implements BaseFormIdInterface {
 
         /** @var \Drupal\facets\Result\Result[] $results */
         $results = $facet->getResults();
-
         $configuration = $facet->getWidgetConfigs();
         $step = (bool) isset($configuration['slider_step']) ? $configuration['slider_step'] : 1;
+        $min = 0;
         $form[$facet->getFieldAlias()] = [
             '#type' => 'range',
-            '#title' => $facet->getName(),
-            '#attributes' => [
-                'min' => 1,
-                'max' => 10,
-                'step' => $step,
-            ],
+            //'#title' => $facet->getName(),
+            '#max' => 200,
+            '#min' => 0,
+            '#step' => 1,
         ];
 
         $form[$facet->id() . '_submit'] = [
@@ -82,19 +80,13 @@ class SliderWidgetForm implements BaseFormIdInterface {
         $facet = $this->facet;
 
         $result_link = FALSE;
-        $active_items = [];
+        $active_items = [$values[$facet->getFieldAlias()]];
 
-        foreach ($values[$facet->getFieldAlias()] as $key => $value) {
-            if ($value !== 0) {
-                $active_items[] = $value;
-            }
-        }
-
-        foreach ($facet->getResults() as $result) {
+        foreach ($facet->getResults() as $result) {dpm($result->getRawValue());
             if (in_array($result->getRawValue(), $active_items)) {
                 $result_link = $result->getUrl();
             }
-        }
+        }dpm($active_items);
 
         // We have an active item, so we redirect to the page that has that facet
         // selected. This should be an absolute link because RedirectResponse is a
