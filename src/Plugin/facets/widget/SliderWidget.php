@@ -5,11 +5,11 @@ namespace Drupal\facet_slider\Plugin\facets\widget;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\facets\FacetInterface;
-use Drupal\facets\Form\CheckboxWidgetForm;
+use Drupal\facet_slider\Form\SliderWidgetForm;
 use Drupal\facets\Widget\WidgetInterface;
 
 /**
- * The checkbox / radios widget.
+ * The slider widget.
  *
  * @FacetsWidget(
  *   id = "slider",
@@ -26,7 +26,7 @@ class SliderWidget implements WidgetInterface {
      */
     public function build(FacetInterface $facet) {
         $form_builder = \Drupal::getContainer()->get('form_builder');
-        $form_object = new CheckboxWidgetForm($facet);
+        $form_object = new SliderWidgetForm($facet);
         return $form_builder->getForm($form_object);
     }
 
@@ -35,15 +35,15 @@ class SliderWidget implements WidgetInterface {
      */
     public function buildConfigurationForm(array $form, FormStateInterface $form_state, $config) {
 
-        $form['show_numbers'] = [
-            '#type' => 'checkbox',
-            '#title' => $this->t('Show the amount of results'),
+        $form['slider_step'] = [
+            '#type' => 'textfield',
+            '#title' => $this->t('Step value'),
         ];
 
         if (!is_null($config)) {
             $widget_configs = $config->get('widget_configs');
-            if (isset($widget_configs['show_numbers'])) {
-                $form['show_numbers']['#default_value'] = $widget_configs['show_numbers'];
+            if (isset($widget_configs['slider_step'])) {
+                $form['slider_step']['#default_value'] = $widget_configs['slider_step'];
             }
         }
 
