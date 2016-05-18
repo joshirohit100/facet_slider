@@ -1,5 +1,7 @@
-name: 'Facet api slider'
+name: 'Facet slider'
 type: module
-description: 'Faceted search slider interfaces that can be used on Search API searchers.'
+description: 'Faceted search slider interfaces that can be used on search.'
 core: 8.x
 package: Search
+dependencies:
+  - facets
