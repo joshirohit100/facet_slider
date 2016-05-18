@@ -14,7 +14,7 @@ use Drupal\facets\Widget\WidgetInterface;
  * @FacetsWidget(
  *   id = "slider",
  *   label = @Translation("Slider"),
- *   description = @Translation("A configurable widget that shows as a slider"),
+ *   description = @Translation("A configurable widget that show as a slider"),
  * )
  */
 class SliderWidget implements WidgetInterface {

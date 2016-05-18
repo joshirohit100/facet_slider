@@ -1,0 +1,8 @@
+facets.facet_slider:
+  version: VERSION
+  js:
+    js/facet_slider.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/jquery.once

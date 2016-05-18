@@ -48,21 +48,32 @@ class SliderWidgetForm implements BaseFormIdInterface {
 
         /** @var \Drupal\facets\Result\Result[] $results */
         $results = $facet->getResults();
+
+        $max = [];
+        foreach ($results as $result) {
+            $max[] = $result->getRawValue();
+        }
         $configuration = $facet->getWidgetConfigs();
-        $step = (bool) isset($configuration['slider_step']) ? $configuration['slider_step'] : 1;
-        $min = 0;
+        $default_val = $results[0]->isActive() ? $results[0]->getRawValue() : 0;
+
         $form[$facet->getFieldAlias()] = [
             '#type' => 'range',
-            //'#title' => $facet->getName(),
-            '#max' => 200,
-            '#min' => 0,
-            '#step' => 1,
+            '#max'  => max($max),
+            '#min'  =>  0,
+            '#step' => (bool) isset($configuration['slider_step']) ? $configuration['slider_step'] : 1,
+            '#suffix' => '<div class="facet-slider-val">' . $default_val . '</div>',
+            '#default_value' => $default_val,
         ];
 
         $form[$facet->id() . '_submit'] = [
             '#type' => 'submit',
             '#value' => 'submit',
         ];
+
+        $form['#attributes'] = [
+            'class' => ['facet-slider-facet'],
+        ];
+        $form['#attached']['library'][] = 'facet_slider/facets.facet_slider';
 
         return $form;
     }
@@ -82,31 +93,17 @@ class SliderWidgetForm implements BaseFormIdInterface {
         $result_link = FALSE;
         $active_items = [$values[$facet->getFieldAlias()]];
 
-        foreach ($facet->getResults() as $result) {dpm($result->getRawValue());
+        foreach ($facet->getResults() as $result) {
             if (in_array($result->getRawValue(), $active_items)) {
                 $result_link = $result->getUrl();
             }
-        }dpm($active_items);
+        }
 
-        // We have an active item, so we redirect to the page that has that facet
-        // selected. This should be an absolute link because RedirectResponse is a
-        // symfony class that requires a full URL.
         if ($result_link instanceof Url) {
             $result_link->setAbsolute();
             $form_state->setResponse(new RedirectResponse($result_link->toString()));
             return;
         }
-
-        // The form was submitted but nothing was active in the form, we should
-        // still redirect, but the url for the new page can't come from a result.
-        // So we're redirecting to the facet source's page.
-        $path = $facet->getFacetSource()->getPath();
-        if (substr($path, 0, 1) !== '/') {
-            $path = '/' . $path;
-        }
-        $link = Url::fromUserInput($path);
-        $link->setAbsolute();
-        $form_state->setResponse(new RedirectResponse($link->toString()));
     }
 
 }
