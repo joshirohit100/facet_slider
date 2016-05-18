@@ -65,10 +65,12 @@ class SliderWidgetForm implements BaseFormIdInterface {
             '#default_value' => $default_val,
         ];
 
-        $form[$facet->id() . '_submit'] = [
-            '#type' => 'submit',
-            '#value' => 'submit',
-        ];
+        if ($configuration['slider_submit_button']) {
+            $form[$facet->id() . '_submit'] = [
+                '#type' => 'submit',
+                '#value' => $configuration['slider_submit_button_txt'],
+            ];
+        }
 
         $form['#attributes'] = [
             'class' => ['facet-slider-facet'],

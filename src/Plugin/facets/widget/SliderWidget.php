@@ -48,12 +48,23 @@ class SliderWidget implements WidgetInterface {
             '#type' => 'textfield',
             '#title' => $this->t('Submit button text'),
             '#description' => $this->t('Text that will appear on submit button'),
+            '#states' => [
+                'visible' => array(
+                    ':input[name="widget_configs[slider_submit_button]"]' => array('checked' => TRUE),
+                ),
+            ],
         ];
 
         if (!is_null($config)) {
             $widget_configs = $config->get('widget_configs');
             if (isset($widget_configs['slider_step'])) {
                 $form['slider_step']['#default_value'] = $widget_configs['slider_step'];
+            }
+            if (isset($widget_configs['slider_submit_button'])) {
+                $form['slider_submit_button']['#default_value'] = $widget_configs['slider_submit_button'];
+            }
+            if (isset($widget_configs['slider_submit_button_txt'])) {
+                $form['slider_submit_button_txt']['#default_value'] = $widget_configs['slider_submit_button_txt'];
             }
         }
 
