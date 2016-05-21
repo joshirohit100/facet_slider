@@ -39,20 +39,13 @@ class SliderWidget implements WidgetInterface {
             '#type' => 'textfield',
             '#title' => $this->t('Step value'),
         ];
-        $form['slider_submit_button'] = [
-            '#type' => 'checkbox',
-            '#title' => $this->t('Want a submit button?'),
-            '#description' => $this->t('If checked, then slider will work on clicking the submit button.'),
-        ];
-        $form['slider_submit_button_txt'] = [
+        $form['slider_prefix'] = [
             '#type' => 'textfield',
-            '#title' => $this->t('Submit button text'),
-            '#description' => $this->t('Text that will appear on submit button'),
-            '#states' => [
-                'visible' => array(
-                    ':input[name="widget_configs[slider_submit_button]"]' => array('checked' => TRUE),
-                ),
-            ],
+            '#title' => $this->t('Prefix'),
+        ];
+        $form['slider_suffix'] = [
+            '#type' => 'textfield',
+            '#title' => $this->t('Suffix'),
         ];
 
         if (!is_null($config)) {
@@ -60,11 +53,11 @@ class SliderWidget implements WidgetInterface {
             if (isset($widget_configs['slider_step'])) {
                 $form['slider_step']['#default_value'] = $widget_configs['slider_step'];
             }
-            if (isset($widget_configs['slider_submit_button'])) {
-                $form['slider_submit_button']['#default_value'] = $widget_configs['slider_submit_button'];
+            if (isset($widget_configs['slider_prefix'])) {
+                $form['slider_prefix']['#default_value'] = $widget_configs['slider_prefix'];
             }
-            if (isset($widget_configs['slider_submit_button_txt'])) {
-                $form['slider_submit_button_txt']['#default_value'] = $widget_configs['slider_submit_button_txt'];
+            if (isset($widget_configs['slider_suffix'])) {
+                $form['slider_suffix']['#default_value'] = $widget_configs['slider_suffix'];
             }
         }
 

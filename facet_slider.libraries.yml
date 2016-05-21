@@ -6,3 +6,4 @@ facets.facet_slider:
     - core/jquery
     - core/drupal
     - core/jquery.once
+    - core/jquery.ui.slider

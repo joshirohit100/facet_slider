@@ -56,26 +56,27 @@ class SliderWidgetForm implements BaseFormIdInterface {
         $configuration = $facet->getWidgetConfigs();
         $default_val = $results[0]->isActive() ? $results[0]->getRawValue() : 0;
 
-        $form[$facet->getFieldAlias()] = [
-            '#type' => 'range',
-            '#max'  => max($max),
-            '#min'  =>  0,
-            '#step' => (bool) isset($configuration['slider_step']) ? $configuration['slider_step'] : 1,
-            '#suffix' => '<div class="facet-slider-val">' . $default_val . '</div>',
-            '#default_value' => $default_val,
-        ];
-
-        if ($configuration['slider_submit_button']) {
-            $form[$facet->id() . '_submit'] = [
-                '#type' => 'submit',
-                '#value' => $configuration['slider_submit_button_txt'],
-            ];
-        }
+        $form[$facet->getFieldAlias() . '_slider'] = array(
+            '#markup' => '<div class="facet-slider-slider"></div>',
+        );
 
         $form['#attributes'] = [
             'class' => ['facet-slider-facet'],
         ];
-        $form['#attached']['library'][] = 'facet_slider/facets.facet_slider';
+
+        $form['#attached'] = [
+            'library' => ['facet_slider/facets.facet_slider'],
+            'drupalSettings' => [
+                'facet_slider' => [
+                 $facet->getFieldAlias() => [
+                        'max' => max($max),
+                        'step' => $configuration['slider_step'] ? : 1,
+                        'prefix' => $configuration['slider_prefix'] ? : '',
+                        'suffix' => $configuration['slider_suffix'] ? : '',
+                    ],
+                ],
+            ],
+        ];
 
         return $form;
     }
@@ -90,7 +91,7 @@ class SliderWidgetForm implements BaseFormIdInterface {
      */
     public function submitForm(array &$form, FormStateInterface $form_state) {
         $values = $form_state->getValues();
-        $facet = $this->facet;
+        $facet = $this->facet;dpm($facet->getResults());
 
         $result_link = FALSE;
         $active_items = [$values[$facet->getFieldAlias()]];
@@ -106,6 +107,18 @@ class SliderWidgetForm implements BaseFormIdInterface {
             $form_state->setResponse(new RedirectResponse($result_link->toString()));
             return;
         }
+
+        // The form was submitted but nothing was active in the form, we should
+        // still redirect, but the url for the new page can't come from a result.
+        // So we're redirecting to the facet source's page.
+        $path = $facet->getFacetSource()->getPath();
+        if (substr($path, 0, 1) !== '/') {
+            $path = '/' . $path;
+        }
+        $option = ['query' => 'f[0]='.$facet->getFieldAlias() . ':' . $active_items];
+        $link = Url::fromUserInput($path);
+        $link->setAbsolute();dpm($link);
+        $form_state->setResponse(new RedirectResponse($link->toString()));
     }
 
 }
